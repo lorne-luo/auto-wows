@@ -38,9 +38,6 @@ def select_ship():
     global need_move
     need_move=True
 
-def is_battle_finish():
-    return pag.locateCenterOnScreen(os.path.join(BUTTON_FOLDER,'battle_finish_identifier.bmp'))
-
 def quit_esc():
     if sum(pag.pixel(1168,1109)) > 230 * 3:
         pag.press('esc')
@@ -96,11 +93,9 @@ def fire_ship():
     pag.click(MAP_CENTER,clicks=2)
     pag.press('r', presses=2, interval=0.5)
     pag.press('f3', presses=1)
-
+    time.sleep(5)
 
 if __name__ == '__main__':
-
-
     # loc =  pag.locateCenterOnScreen(os.path.join(BUTTON_FOLDER,'ap.bmp'))
     # loc=in_port()
     # print('#',loc)
@@ -125,12 +120,7 @@ if __name__ == '__main__':
         elif in_port():
             print('In port.')
             select_ship()
-
-        # elif is_battle_finish():
-        #     print('Battle finished.')
-        #     quit_battle()
         else:
             print('In else, sleep 5 secs')
-            time.sleep(15)
-
+            time.sleep(5)
         quit_esc()
