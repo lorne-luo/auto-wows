@@ -11,27 +11,30 @@ pag.FAILSAFE=False
 BUTTON_FOLDER = 'buttons'
 SHIP_FOLDER = 'ships'
 SHIP_POINTS=[
-    (174,977),
-    (174,1050),
+    (174,967),
+    (174,1030),
+    # (174,1100),
 ]
 start_button=(1182,62)
-QUIT_BUTTON_LOC=(1177,514)
-QUIT_CONFIRM_BUTTON_LOC=(1097,626)
-MAP_CENTER=(1181,567)
+QUIT_BUTTON_LOC=(1173,499)
+QUIT_CONFIRM_BUTTON_LOC=(1097,611)
+MAP_CENTER=(1131,567)
+AIMING_CENTER=(1177,609)
+
 need_move=True
 
 
 def in_port():
-    pix=pag.pixel(22,1173)
-    return pix==(243, 214, 191)
-
+    pix=pag.pixel(21,900)
+    return pix==(148, 198, 199)
+    # return pag.locateCenterOnScreen(os.path.join(BUTTON_FOLDER,'port_identifier.bmp'))
 
 def select_ship():
     pag.click(start_button,clicks=1, button='left')
     for loc in SHIP_POINTS:
         pag.moveTo(loc)
         # print(f'Ship select {loc}')
-        pag.click(loc, clicks=2, interval=1, button='left')
+        pag.click(loc, clicks=3, interval=1, button='left')
         pag.moveTo(start_button)
         # print(f'Enter battle')
         time.sleep(2)
@@ -40,12 +43,12 @@ def select_ship():
     need_move=True
 
 def quit_esc():
-    if sum(pag.pixel(1168,1109)) > 230 * 3:
+    if sum(pag.pixel(1170,1082)) > 250 * 3:
         pag.press('esc')
         time.sleep(3)
-    if sum(pag.pixel(1146,1104)) > 230 * 3:
+    if sum(pag.pixel(1168,1082)) > 250 * 3:
         pag.press('esc')
-        time.sleep(7)
+        time.sleep(10)
 
 def quit_battle():
     pag.press('esc')
@@ -59,15 +62,20 @@ def quit_battle():
     need_move=True
 
 def in_battle():
-    return sum(pag.pixel(11,937)) > 230 * 3
+    return sum(pag.pixel(13,914)) > 230 * 3
 
 def is_alive():
-    pix=pag.pixel(1076,1142)
-    # print('is alive',pix)
-    return pix==(183, 31, 6) or pix == (146, 46, 14)
+    if pag.locateCenterOnScreen(os.path.join(BUTTON_FOLDER,'ap.bmp')):
+        return True
+    if sum(pag.pixel(1268,612)) > 250 * 3:
+        return True
+        
+    pix=pag.pixel(60,892)
+    return pix[0]<35
 
 def run_ship():
     pag.press('w', presses=5, interval=0.5)
+    pag.press('1')
     pag.press('m')
     time.sleep(1)
     for i in range(4):
@@ -76,14 +84,15 @@ def run_ship():
     pag.press('esc')
 
     pag.click(loc,clicks=2)
+    pag.press('t', presses=2, interval=0.5)
     pag.press('y', presses=2, interval=0.5)
-    pag.press('r', presses=2, interval=0.5)
+    pag.press('u', presses=2, interval=0.5)
     global need_move
     need_move=False
     time.sleep(70)
 
 def focus_wows():
-    loc=(79,14)
+    loc=(2190,119)
     pag.moveTo(loc)
     pag.click(loc,clicks=2, interval=1)
 
@@ -93,6 +102,7 @@ def print_pix(x,y):
 def fire_ship():
     pag.click(MAP_CENTER,clicks=2)
     pag.press('r', presses=2, interval=0.5)
+    pag.press('t', presses=2, interval=0.5)
     pag.press('f3', presses=1)
     time.sleep(5)
 
