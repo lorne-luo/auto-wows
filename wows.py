@@ -27,14 +27,15 @@ def in_port():
 
 
 def select_ship():
+    pag.click(start_button,clicks=1, button='left')
     for loc in SHIP_POINTS:
         pag.moveTo(loc)
-        print(f'Ship select {loc}')
-        pag.click(loc, clicks=3, interval=1, button='left')
+        # print(f'Ship select {loc}')
+        pag.click(loc, clicks=2, interval=1, button='left')
         pag.moveTo(start_button)
-        print(f'Enter battle')
+        # print(f'Enter battle')
         time.sleep(2)
-        pag.click(start_button,clicks=3, interval=1, button='left')
+        pag.click(start_button,clicks=2, interval=1, button='left')
     global need_move
     need_move=True
 
@@ -49,7 +50,7 @@ def quit_esc():
 def quit_battle():
     pag.press('esc')
     time.sleep(1)
-    print('quit_battle.click')
+    # print('quit_battle.click')
     pag.click(QUIT_BUTTON_LOC, clicks=2, interval=1, button='left')
     time.sleep(1)
     pag.click(QUIT_CONFIRM_BUTTON_LOC, clicks=2, interval=1, button='left')
@@ -62,7 +63,7 @@ def in_battle():
 
 def is_alive():
     pix=pag.pixel(1076,1142)
-    print('is alive',pix)
+    # print('is alive',pix)
     return pix==(183, 31, 6) or pix == (146, 46, 14)
 
 def run_ship():
