@@ -3,28 +3,12 @@ from random import randint
 
 import pyautogui as pag
 
+import settings as settings
+
 pag.PAUSE = 0
 pag.FAILSAFE = False
 
-BUTTON_FOLDER = 'buttons'
 NEED_MOVE = True
-
-# in port, enter battle
-WINDOW_FOCUS=(2190, 119)
-SHIP_FILTER_BUTTON = (21, 900)  # in_port
-START_BUTTON = (1182, 62)
-# in battle
-SHIP_TYPE_ICON = (13, 914)
-AIMING_DISTANCE_KM = (1268, 612)
-SHIP_HEALTH = (60, 892)
-MAP_CENTER = (1131, 567)
-AIMING_CENTER = (1177, 609)
-# quit battle
-QUIT_BATTLE_BUTTON = (1173, 499)
-QUIT_BATTLE_CONFIRM_BUTTON = (1097, 611)
-#  battle finished
-QUIT_BATTLE_FINISHED_BUTTON = (1168, 1082)
-QUIT_BATTLE_FINISHED_BUTTON2 = (1170, 1082)
 
 SHIPS = [
     (174, 967),
@@ -34,23 +18,23 @@ SHIPS = [
 
 
 def in_port():
-    pix = pag.pixel(*SHIP_FILTER_BUTTON)
-    return pix == (148, 198, 199)
-    # return pag.locateCenterOnScreen(os.path.join(BUTTON_FOLDER,'port_identifier.bmp'))
+    point = settings.SHIP_FILTER_BUTTON
+    color = (148, 198, 199)
+    return pag.pixelMatchesColor(*point, color, tolerance=10)
 
 
 def select_ship():
     for loc in SHIPS:
         # print(f'Ship select {loc}')
-        pag.moveTo(loc)
+        pag.moveTo(loc, duration=0.5)
         pag.click(loc, clicks=3, interval=1, button='left')
+        time.sleep(2)
 
         # print(f'Enter battle')
-        pag.moveTo(START_BUTTON)
+        pag.moveTo(settings.START_BUTTON, duration=0.5)
+        pag.click(settings.START_BUTTON, clicks=2, interval=1, button='left')
         time.sleep(2)
-        pag.click(START_BUTTON, clicks=2, interval=1, button='left')
 
-        time.sleep(2)
         if not in_port():
             break
 
@@ -59,37 +43,48 @@ def select_ship():
 
 
 def quit_esc():
-    if sum(pag.pixel(*QUIT_BATTLE_FINISHED_BUTTON2)) > 250 * 3:
+    if pag.pixelMatchesColor(*settings.QUIT_BATTLE_FINISHED_BUTTON2,
+                             settings.BUTTON_COLOR,
+                             tolerance=5):
         pag.press('esc')
         time.sleep(3)
-    if sum(pag.pixel(*QUIT_BATTLE_FINISHED_BUTTON)) > 250 * 3:
+
+    if pag.pixelMatchesColor(*settings.QUIT_BATTLE_FINISHED_BUTTON,
+                             settings.BUTTON_COLOR,
+                             tolerance=5):
         pag.press('esc')
         time.sleep(10)
 
 
 def quit_battle():
     pag.press('esc')
-    time.sleep(1)
+    time.sleep(2)
     # print('quit_battle.click')
-    pag.click(QUIT_BATTLE_BUTTON, clicks=2, interval=1, button='left')
+    pag.moveTo(settings.QUIT_BATTLE_BUTTON, duration=0.5)
+    pag.click(settings.QUIT_BATTLE_BUTTON, clicks=2, interval=1, button='left')
     time.sleep(1)
-    pag.click(QUIT_BATTLE_CONFIRM_BUTTON, clicks=2, interval=1, button='left')
+
+    pag.moveTo(settings.QUIT_BATTLE_CONFIRM_BUTTON, duration=0.5)
+    pag.click(settings.QUIT_BATTLE_CONFIRM_BUTTON, clicks=2, interval=1, button='left')
     time.sleep(11)
     global NEED_MOVE
     NEED_MOVE = True
 
 
 def in_battle():
-    return sum(pag.pixel(*SHIP_TYPE_ICON)) > 230 * 3
+    return pag.pixelMatchesColor(*settings.SHIP_TYPE_ICON,
+                                 settings.BUTTON_COLOR,
+                                 tolerance=5)
 
 
 def is_alive():
-    # if pag.locateCenterOnScreen(os.path.join(BUTTON_FOLDER, 'ap.bmp')):
-    #     return True
-    if sum(pag.pixel(*AIMING_DISTANCE_KM)) > 250 * 3:
+    if pag.pixelMatchesColor(*settings.AIMING_DISTANCE_KM,
+                                 settings.BUTTON_COLOR,
+                                 tolerance=5):
         return True
 
-    pix = pag.pixel(*SHIP_HEALTH)
+    # todo this may wrong
+    pix = pag.pixel(*settings.SHIP_HEALTH)
     return pix[0] < 35
 
 
@@ -97,9 +92,12 @@ def move_ship():
     pag.press('m')
     time.sleep(1)
     for i in range(4):
-        loc = (MAP_CENTER[0] + randint(-90, 90), MAP_CENTER[1] + randint(-90, 90))
-        pag.click(loc, clicks=1, interval=1, button='left')
+        loc = (settings.MAP_CENTER[0] + randint(-90, 90),
+               settings.MAP_CENTER[1] + randint(-90, 90))
+        pag.moveTo(loc, duration=0.5)
+        pag.click(loc, clicks=1, interval=0.5, button='left')
     pag.press('esc')
+    time.sleep(1)
 
 
 def start_battle():
@@ -108,7 +106,8 @@ def start_battle():
 
     move_ship()
 
-    pag.click(MAP_CENTER, clicks=2)
+    pag.moveTo(settings.MAP_CENTER, duration=0.5)
+    pag.click(settings.MAP_CENTER, clicks=2)
     pag.press('t', presses=1, interval=0.5)
     pag.press('y', presses=1, interval=0.5)
     pag.press('u', presses=1, interval=0.5)
@@ -120,8 +119,8 @@ def start_battle():
 
 
 def focus_wows():
-    pag.moveTo(WINDOW_FOCUS)
-    pag.click(WINDOW_FOCUS, clicks=2, interval=1)
+    pag.moveTo(settings.WINDOW_FOCUS, duration=0.5)
+    pag.click(settings.WINDOW_FOCUS, clicks=2, interval=1)
 
 
 def print_pix(x, y):
@@ -129,11 +128,14 @@ def print_pix(x, y):
 
 
 def fire_ship():
-    pag.click(MAP_CENTER, clicks=2)
+    pag.click(settings.MAP_CENTER, clicks=2)
     pag.press('r', presses=1, interval=0.5)
     pag.press('t', presses=1, interval=0.5)
     pag.press('u', presses=1, interval=0.5)
     time.sleep(5)
+    move_turret = (randint(-300, 300), randint(-20, 20))
+    print(f'Move turret {move_turret}')
+    pag.move(*move_turret, duration=1)
 
 
 if __name__ == '__main__':
