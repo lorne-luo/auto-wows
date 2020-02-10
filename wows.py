@@ -32,7 +32,7 @@ def select_ship():
 
         # print(f'Enter battle')
         pag.moveTo(settings.START_BUTTON, duration=0.5)
-        pag.click(settings.START_BUTTON, clicks=2, interval=1, button='left')
+        pag.click(settings.START_BUTTON, clicks=3, interval=1, button='left')
         time.sleep(2)
 
         if not in_port():
@@ -94,8 +94,8 @@ def move_ship():
     for i in range(4):
         loc = (settings.MAP_CENTER[0] + randint(-90, 90),
                settings.MAP_CENTER[1] + randint(-90, 90))
-        pag.moveTo(loc, duration=0.5)
-        pag.click(loc, clicks=1, interval=0.5, button='left')
+        pag.moveTo(loc)
+        pag.click(loc, clicks=2, interval=0.5, button='left')
     pag.press('esc')
     time.sleep(1)
 
@@ -111,7 +111,7 @@ def start_battle():
     pag.press('t', presses=1, interval=0.5)
     pag.press('y', presses=1, interval=0.5)
     pag.press('u', presses=1, interval=0.5)
-    pag.press('f12')
+    pag.press('f10')
 
     global NEED_MOVE
     NEED_MOVE = False
@@ -119,7 +119,6 @@ def start_battle():
 
 
 def focus_wows():
-    pag.moveTo(settings.WINDOW_FOCUS, duration=0.5)
     pag.click(settings.WINDOW_FOCUS, clicks=2, interval=1)
 
 
@@ -133,9 +132,9 @@ def fire_ship():
     pag.press('t', presses=1, interval=0.5)
     pag.press('u', presses=1, interval=0.5)
     time.sleep(5)
-    move_turret = (randint(-300, 300), randint(-20, 20))
-    print(f'Move turret {move_turret}')
-    pag.move(*move_turret, duration=1)
+    # move_turret = (randint(-300, 300), randint(-20, 20))
+    # print(f'Move turret {move_turret}')
+    # pag.move(*move_turret, duration=0.5)
 
 
 if __name__ == '__main__':
