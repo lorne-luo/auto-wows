@@ -1,1 +1,4 @@
 pyautogui
+pynput
+mouse
+pywinauto

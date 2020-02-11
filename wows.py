@@ -2,6 +2,7 @@ import time
 from random import randint
 
 import pyautogui as pag
+from pyautogui._window_win import getWindow
 
 import settings as settings
 
@@ -79,8 +80,8 @@ def in_battle():
 
 def is_alive():
     if pag.pixelMatchesColor(*settings.AIMING_DISTANCE_KM,
-                                 settings.BUTTON_COLOR,
-                                 tolerance=5):
+                             settings.BUTTON_COLOR,
+                             tolerance=5):
         return True
 
     # todo this may wrong
@@ -119,6 +120,11 @@ def start_battle():
 
 
 def focus_wows():
+    wows_window = getWindow('World of warships')
+    wows_window.set_foreground()  # switch to wows window
+    position = wows_window.get_position()
+    print(f'WOWS position: {position}')
+    # wows_window.set_position(0, 0,)
     pag.click(settings.WINDOW_FOCUS, clicks=2, interval=0.5)
 
 
