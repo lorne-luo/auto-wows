@@ -26,13 +26,13 @@ def in_port():
 def select_ship():
     for loc in SHIPS:
         # print(f'Ship select {loc}')
-        pag.moveTo(loc, duration=0.5)
+        pag.moveTo(loc, duration=0.25)
         pag.click(loc, clicks=3, interval=1, button='left')
         time.sleep(2)
 
         # print(f'Enter battle')
-        pag.moveTo(settings.START_BUTTON, duration=0.5)
-        pag.click(settings.START_BUTTON, clicks=3, interval=1, button='left')
+        pag.moveTo(settings.START_BUTTON, duration=0.25)
+        pag.click(settings.START_BUTTON, clicks=3, interval=0.5, button='left')
         time.sleep(2)
 
         if not in_port():
@@ -60,12 +60,12 @@ def quit_battle():
     pag.press('esc')
     time.sleep(2)
     # print('quit_battle.click')
-    pag.moveTo(settings.QUIT_BATTLE_BUTTON, duration=0.5)
-    pag.click(settings.QUIT_BATTLE_BUTTON, clicks=2, interval=1, button='left')
+    pag.moveTo(settings.QUIT_BATTLE_BUTTON, duration=0.25)
+    pag.click(settings.QUIT_BATTLE_BUTTON, clicks=2, interval=0.5, button='left')
     time.sleep(1)
 
-    pag.moveTo(settings.QUIT_BATTLE_CONFIRM_BUTTON, duration=0.5)
-    pag.click(settings.QUIT_BATTLE_CONFIRM_BUTTON, clicks=2, interval=1, button='left')
+    pag.moveTo(settings.QUIT_BATTLE_CONFIRM_BUTTON, duration=0.25)
+    pag.click(settings.QUIT_BATTLE_CONFIRM_BUTTON, clicks=2, interval=0.5, button='left')
     time.sleep(11)
     global NEED_MOVE
     NEED_MOVE = True
@@ -94,23 +94,23 @@ def move_ship():
     for i in range(4):
         loc = (settings.MAP_CENTER[0] + randint(-90, 90),
                settings.MAP_CENTER[1] + randint(-90, 90))
-        pag.moveTo(loc)
-        pag.click(loc, clicks=2, interval=0.5, button='left')
+        pag.moveTo(loc, duration=0.25)
+        pag.click(loc, clicks=2, interval=0.25, button='left')
     pag.press('esc')
     time.sleep(1)
 
 
 def start_battle():
-    pag.press('w', presses=5, interval=0.5)
+    pag.press('w', presses=5, interval=0.25)
     pag.press('1')
 
     move_ship()
 
-    pag.moveTo(settings.MAP_CENTER, duration=0.5)
+    pag.moveTo(settings.MAP_CENTER, duration=0.25)
     pag.click(settings.MAP_CENTER, clicks=2)
-    pag.press('t', presses=1, interval=0.5)
-    pag.press('y', presses=1, interval=0.5)
-    pag.press('u', presses=1, interval=0.5)
+    pag.press('t', presses=1, interval=0.25)
+    pag.press('y', presses=1, interval=0.25)
+    pag.press('u', presses=1, interval=0.25)
     pag.press('f10')
 
     global NEED_MOVE
@@ -119,7 +119,7 @@ def start_battle():
 
 
 def focus_wows():
-    pag.click(settings.WINDOW_FOCUS, clicks=2, interval=1)
+    pag.click(settings.WINDOW_FOCUS, clicks=2, interval=0.5)
 
 
 def print_pix(x, y):
@@ -128,13 +128,13 @@ def print_pix(x, y):
 
 def fire_ship():
     pag.click(settings.MAP_CENTER, clicks=2)
-    pag.press('r', presses=1, interval=0.5)
-    pag.press('t', presses=1, interval=0.5)
-    pag.press('u', presses=1, interval=0.5)
+    pag.press('r', presses=1, interval=0.25)
+    pag.press('t', presses=1, interval=0.25)
+    pag.press('u', presses=1, interval=0.25)
     time.sleep(5)
     # move_turret = (randint(-300, 300), randint(-20, 20))
     # print(f'Move turret {move_turret}')
-    # pag.move(*move_turret, duration=0.5)
+    # pag.move(*move_turret, duration=0.25)
 
 
 if __name__ == '__main__':
