@@ -79,23 +79,18 @@ def in_battle():
 
 
 def is_alive():
-    if pag.pixelMatchesColor(*settings.AIMING_DISTANCE_KM,
-                             settings.BUTTON_COLOR,
-                             tolerance=5):
-        return True
-
-    # todo this may wrong
-    pix = pag.pixel(*settings.SHIP_HEALTH)
-    return pix[0] < 35
+    return  all([pag.pixelMatchesColor(*settings.SPEED_S, settings.BUTTON_COLOR, tolerance=50),
+                pag.pixelMatchesColor(*settings.SPEED_W, settings.BUTTON_COLOR, tolerance=50),
+                pag.pixelMatchesColor(*settings.SPEED_M, settings.BUTTON_COLOR, tolerance=50)])
 
 
 def move_ship():
-    pag.press('m')
+    pag.press('m',presses=2, interval=0.25)
     time.sleep(1)
     for i in range(4):
         loc = (settings.MAP_CENTER[0] + randint(-90, 90),
                settings.MAP_CENTER[1] + randint(-90, 90))
-        pag.moveTo(loc, duration=0.25)
+        pag.moveTo(loc)
         pag.click(loc, clicks=2, interval=0.25, button='left')
     pag.press('esc')
     time.sleep(1)
@@ -107,7 +102,7 @@ def start_battle():
 
     move_ship()
 
-    pag.moveTo(settings.MAP_CENTER, duration=0.25)
+    pag.moveTo(settings.MAP_CENTER)
     pag.click(settings.MAP_CENTER, clicks=2)
     pag.press('t', presses=1, interval=0.25)
     pag.press('y', presses=1, interval=0.25)
@@ -120,23 +115,26 @@ def start_battle():
 
 
 def focus_wows():
-    wows_window = getWindow('World of warships')
+    wows_window = getWindow('World of Warships')
+    wows_window.set_position(*settings.WINDOW_POSITION)
     wows_window.set_foreground()  # switch to wows window
-    position = wows_window.get_position()
-    print(f'WOWS position: {position}')
-    # wows_window.set_position(0, 0,)
-    pag.click(settings.WINDOW_FOCUS, clicks=2, interval=0.5)
 
 
-def print_pix(x, y):
+def aim():
+    pag.press('shiftleft', presses=2, interval=0.25)
+
     print(pag.pixel(x, y))
 
 
 def fire_ship():
+    pag.press('shiftleft', presses=2, interval=0.25)
     pag.click(settings.MAP_CENTER, clicks=2)
     pag.press('r', presses=1, interval=0.25)
     pag.press('t', presses=1, interval=0.25)
     pag.press('u', presses=1, interval=0.25)
+    pag.sleep(1)
+    pag.press('shiftleft', presses=1, interval=0.25)
+
     time.sleep(5)
     # move_turret = (randint(-300, 300), randint(-20, 20))
     # print(f'Move turret {move_turret}')
