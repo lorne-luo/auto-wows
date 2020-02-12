@@ -5,6 +5,7 @@ import pyautogui as pag
 from pyautogui._window_win import getWindow
 
 import settings as settings
+from helper import get_battle_field_image, search_enemy_ships, select_nearest_enemy
 
 pag.PAUSE = 0
 pag.FAILSAFE = False
@@ -79,13 +80,13 @@ def in_battle():
 
 
 def is_alive():
-    return  all([pag.pixelMatchesColor(*settings.SPEED_S, settings.BUTTON_COLOR, tolerance=50),
+    return all([pag.pixelMatchesColor(*settings.SPEED_S, settings.BUTTON_COLOR, tolerance=50),
                 pag.pixelMatchesColor(*settings.SPEED_W, settings.BUTTON_COLOR, tolerance=50),
                 pag.pixelMatchesColor(*settings.SPEED_M, settings.BUTTON_COLOR, tolerance=50)])
 
 
 def move_ship():
-    pag.press('m',presses=2, interval=0.25)
+    pag.press('m', presses=2, interval=0.25)
     time.sleep(1)
     for i in range(4):
         loc = (settings.MAP_CENTER[0] + randint(-90, 90),
@@ -97,7 +98,7 @@ def move_ship():
 
 
 def start_battle():
-    pag.press('w', presses=5, interval=0.25)
+    pag.press('width', presses=5, interval=0.25)
     pag.press('1')
 
     move_ship()
@@ -120,13 +121,21 @@ def focus_wows():
     wows_window.set_foreground()  # switch to wows window
 
 
-def aim():
-    pag.press('shiftleft', presses=2, interval=0.25)
+def select_enemy():
+    battle_field = get_battle_field_image()
+    enemy_locs = []
+    for ship_type in ['dd', 'ca', 'bb']:
+        enemy_locs += search_enemy_ships(battle_field, ship_type)
+        if enemy_locs:
+            break
 
-    print(pag.pixel(x, y))
+    return select_nearest_enemy(enemy_locs)
 
 
 def fire_ship():
+    enemy_ship = select_ship()
+    print(enemy_ship)
+
     pag.press('shiftleft', presses=2, interval=0.25)
     pag.click(settings.MAP_CENTER, clicks=2)
     pag.press('r', presses=1, interval=0.25)
@@ -136,9 +145,6 @@ def fire_ship():
     pag.press('shiftleft', presses=1, interval=0.25)
 
     time.sleep(5)
-    # move_turret = (randint(-300, 300), randint(-20, 20))
-    # print(f'Move turret {move_turret}')
-    # pag.move(*move_turret, duration=0.25)
 
 
 if __name__ == '__main__':
