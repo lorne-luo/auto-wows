@@ -5,12 +5,14 @@ import pyautogui as pag
 from pyautogui._window_win import getWindow
 
 import settings as settings
-from helper import get_battle_field_image, search_enemy_ships, select_nearest_enemy
+from helper import get_battle_field_image, search_enemy_ships, select_nearest_enemy, distance
+from mouse import move_mouse
 
 pag.PAUSE = 0
 pag.FAILSAFE = False
 
 NEED_MOVE = True
+FIRE_ROUNDS = 0
 
 SHIPS = [
     (174, 967),
@@ -110,9 +112,10 @@ def start_battle():
     pag.press('u', presses=1, interval=0.25)
     pag.press('f10')
 
-    global NEED_MOVE
+    global NEED_MOVE, FIRE_ROUNDS
     NEED_MOVE = False
-    time.sleep(60)
+    FIRE_ROUNDS = 0
+    time.sleep(70)
 
 
 def focus_wows():
@@ -128,23 +131,44 @@ def select_enemy():
         enemy_locs += search_enemy_ships(battle_field, ship_type)
         if enemy_locs:
             break
-
     return select_nearest_enemy(enemy_locs)
 
 
-def fire_ship():
-    enemy_ship = select_ship()
-    print(enemy_ship)
+def move_crosshair(loc):
+    AIMING_OFFSET = (0, 50)
+    x = settings.CROSSHAIR[0] - loc[0]
+    y = settings.CROSSHAIR[1] + AIMING_OFFSET - loc[1]
+    move_mouse(x, y)
 
-    pag.press('shiftleft', presses=2, interval=0.25)
+    dis = distance(AIMING_OFFSET, loc)
+    seconds = dis / 1000 * 15
+    pag.sleep(seconds )
+
+
+def fire_ship():
+    nearest_enemy_loc = select_enemy()
+    print(nearest_enemy_loc)
+
+    if not nearest_enemy_loc:
+        pag.sleep(10)
+        return
+
+    move_crosshair(nearest_enemy_loc)
+    global FIRE_ROUNDS
+
+    # pag.press('shiftleft', presses=2, interval=0.25)
     pag.click(settings.MAP_CENTER, clicks=2)
     pag.press('r', presses=1, interval=0.25)
-    pag.press('t', presses=1, interval=0.25)
-    pag.press('u', presses=1, interval=0.25)
+    if not FIRE_ROUNDS % 10:
+        pag.press('t', presses=1, interval=0.25)
+        pag.press('y', presses=1, interval=0.25)
+        pag.press('u', presses=1, interval=0.25)
     pag.sleep(1)
-    pag.press('shiftleft', presses=1, interval=0.25)
+    # pag.press('shiftleft', presses=1, interval=0.25)
 
     time.sleep(5)
+    pag.click(settings.MAP_CENTER, clicks=2)
+    FIRE_ROUNDS += 1
 
 
 if __name__ == '__main__':

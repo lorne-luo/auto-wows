@@ -40,7 +40,7 @@ def select_nearest_enemy(locs):
     nearest_loc = None
     nearest_distance = 2560 ** 2
     for loc in locs:
-        dis = distance(settings.AIMING_CENTER, loc)
+        dis = distance(settings.CROSSHAIR, loc)
         if dis < nearest_distance:
             nearest_loc = loc
             nearest_distance = dis
