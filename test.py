@@ -1,8 +1,12 @@
 import pyautogui as pag
-
+import sys
 pag.PAUSE = 0
 pag.FAILSAFE = False
 from helper import *
+from wows import *
+from mouse import *
+import settings
+from pyautogui._window_win import getWindow
 
 BUTTON_FOLDER = 'buttons'
 SHIP_FOLDER = 'ships'
@@ -12,5 +16,20 @@ start_button = (1182, 62)
 QUIT_BUTTON_LOC = (1177, 514)
 
 if __name__ == '__main__':
-    r = pag.pixelMatchesColor(*(1712, 33), (39, 40, 34), tolerance=10)
-    print(r)
+    wows_window = getWindow(settings.WINDOW_TITLE)
+    wows_window.set_foreground()  # switch to wows window
+
+    while True:
+        nearest_enemy_loc = select_enemy()
+        print(nearest_enemy_loc)
+        if not nearest_enemy_loc:
+            continue
+
+        x = nearest_enemy_loc[0]-settings.CROSSHAIR[0]
+        y =(60 + nearest_enemy_loc[1])- settings.CROSSHAIR[1]
+        print(x,y)
+        # move_mouse(0,-150)
+        move_crosshair(nearest_enemy_loc)
+        # move_mouse(100,0)
+        # if nearest_enemy_loc:
+            # move_crosshair(nearest_enemy_loc)

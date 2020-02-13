@@ -119,7 +119,9 @@ def start_battle():
 
 
 def focus_wows():
-    wows_window = getWindow('World of Warships')
+    wows_window = getWindow(settings.WINDOW_TITLE)
+    # wows_window = getWindow('《战舰世界》')
+
     wows_window.set_position(*settings.WINDOW_POSITION)
     wows_window.set_foreground()  # switch to wows window
 
@@ -135,9 +137,12 @@ def select_enemy():
 
 
 def move_crosshair(loc):
-    AIMING_OFFSET = (0, 50)
-    x = settings.CROSSHAIR[0] - loc[0]
-    y = settings.CROSSHAIR[1] + AIMING_OFFSET - loc[1]
+    AIMING_OFFSET = (0, 60)
+    x = loc[0]-settings.CROSSHAIR[0]
+    y =(AIMING_OFFSET[1] + loc[1])- settings.CROSSHAIR[1]
+
+    # print(settings.CROSSHAIR,'->',loc)
+    # print(x,y)
     move_mouse(x, y)
 
     dis = distance(AIMING_OFFSET, loc)
