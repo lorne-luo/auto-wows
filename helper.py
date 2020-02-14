@@ -2,6 +2,7 @@ import os
 from math import sqrt
 
 import cv2
+import os
 import numpy as np
 import pyautogui as pag
 
@@ -15,19 +16,24 @@ def check_pic(filename):
 def get_battle_field_image():
     topleft = settings.BATTLE_FIELD_TOPLEFT
     bottomright = settings.BATTLE_FIELD_BOTTOMRIGHT
-    battle_field_image = pag.screenshot(region=(topleft[0], topleft[1],
-                                                bottomright[0] - topleft[0], bottomright[1] - topleft[1]))
+    # battle_field_image = pag.screenshot(region=(topleft[0], topleft[1],
+    #                                             bottomright[0] - topleft[0], bottomright[1] - topleft[1]))
+    battle_field_image = pag.screenshot(region=(0, 0, settings.WINDOW_POSITION[2], settings.WINDOW_POSITION[3]))
     battle_field_image = cv2.cvtColor(np.array(battle_field_image), cv2.COLOR_RGB2BGR)
     return battle_field_image
 
 
 def search_enemy_ships(image, ship_type):
-    ship_icon = cv2.imread(f'buttons/{ship_type}.png')
+    ship_icon = cv2.imread(f'buttons/{ship_type}.bmp')
     width, height = ship_icon.shape[:2]
     result = cv2.matchTemplate(ship_icon, image, cv2.TM_CCOEFF_NORMED)
     threshold = .8
     loc = np.where(result >= threshold)
-    return [(pt[0] + width / 2, pt[1] + height / 2) for pt in zip(*loc[::-1])]  # Switch collumns and rows
+
+    return [(int(pt[0] + width / 2),
+             int(pt[1] + height / 2)) for pt in zip(*loc[::-1]) if
+            pt[0] < settings.BATTLE_MAP_TOPLEFT[0] and pt[1] < settings.BATTLE_MAP_TOPLEFT[
+                1]]  # Switch collumns and rows
 
 
 def distance(p1, p2):

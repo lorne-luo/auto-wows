@@ -82,40 +82,44 @@ def in_battle():
 
 
 def is_alive():
-    return all([pag.pixelMatchesColor(*settings.SPEED_S, settings.BUTTON_COLOR, tolerance=50),
-                pag.pixelMatchesColor(*settings.SPEED_W, settings.BUTTON_COLOR, tolerance=50),
-                pag.pixelMatchesColor(*settings.SPEED_M, settings.BUTTON_COLOR, tolerance=50)])
+    return sum([pag.pixelMatchesColor(*settings.SPEED_S, settings.BATTLE_SWM_COLOR, tolerance=30),
+                pag.pixelMatchesColor(*settings.SPEED_W, settings.BATTLE_SWM_COLOR, tolerance=30),
+                pag.pixelMatchesColor(*settings.SPEED_M, settings.BATTLE_SWM_COLOR, tolerance=30)]) > 1
 
 
 def move_ship():
-    pag.press('m', presses=2, interval=0.25)
+    pag.press('m', presses=1, interval=0.25)
     time.sleep(1)
     for i in range(4):
         loc = (settings.MAP_CENTER[0] + randint(-90, 90),
                settings.MAP_CENTER[1] + randint(-90, 90))
         pag.moveTo(loc)
-        pag.click(loc, clicks=2, interval=0.25, button='left')
-    pag.press('esc')
+        pag.click(loc, clicks=2, interval=0.5, button='left')
     time.sleep(1)
+    pag.press('esc')
+    time.sleep(2)
 
 
 def start_battle():
-    pag.press('width', presses=5, interval=0.25)
+    pag.press('w', presses=5, interval=0.25)
     pag.press('1')
+    pag.press('y', presses=2, interval=0.25)
+    pag.press('u', presses=2, interval=0.25)
+    pag.sleep(1)
 
     move_ship()
 
-    pag.moveTo(settings.MAP_CENTER)
-    pag.click(settings.MAP_CENTER, clicks=2)
-    pag.press('t', presses=1, interval=0.25)
-    pag.press('y', presses=1, interval=0.25)
-    pag.press('u', presses=1, interval=0.25)
-    pag.press('f10')
+    # pag.moveTo(settings.MAP_CENTER)
+    # pag.click(settings.MAP_CENTER, clicks=2)
+    # pag.press('t', presses=1, interval=0.25)
+    # pag.press('y', presses=1, interval=0.25)
+    # pag.press('u', presses=1, interval=0.25)
+    # pag.press('f10')
 
     global NEED_MOVE, FIRE_ROUNDS
     NEED_MOVE = False
     FIRE_ROUNDS = 0
-    time.sleep(70)
+    pag.sleep(40)
 
 
 def focus_wows():
@@ -138,21 +142,25 @@ def select_enemy():
 
 def move_crosshair(loc):
     AIMING_OFFSET = (0, 60)
-    x = loc[0]-settings.CROSSHAIR[0]
-    y =(AIMING_OFFSET[1] + loc[1])- settings.CROSSHAIR[1]
+    x = loc[0] - settings.CROSSHAIR[0]
+    y = (AIMING_OFFSET[1] + loc[1]) - settings.CROSSHAIR[1]
 
-    # print(settings.CROSSHAIR,'->',loc)
-    # print(x,y)
+    print(settings.CROSSHAIR, '->', loc)
+    print(x, y)
     move_mouse(x, y)
-
-    dis = distance(AIMING_OFFSET, loc)
-    seconds = dis / 1000 * 15
-    pag.sleep(seconds )
 
 
 def fire_ship():
+    if not pag.pixelMatchesColor(*settings.AUTO_PILOT,
+                                 (76, 232, 170),
+                                 tolerance=30):
+        move_ship()
+
+    pag.press('`', presses=1, interval=0.25)
+    pag.press('r', presses=1, interval=0.25)
+
     nearest_enemy_loc = select_enemy()
-    print(nearest_enemy_loc)
+    # print(nearest_enemy_loc)
 
     if not nearest_enemy_loc:
         pag.sleep(10)
@@ -160,19 +168,19 @@ def fire_ship():
 
     move_crosshair(nearest_enemy_loc)
     global FIRE_ROUNDS
+    pag.sleep(2)
+    if pag.pixelMatchesColor(*settings.GUN_READY,
+                             (30, 200, 120),
+                             tolerance=30):
+        pag.click(clicks=2, interval=0.25)
 
-    # pag.press('shiftleft', presses=2, interval=0.25)
-    pag.click(settings.MAP_CENTER, clicks=2)
     pag.press('r', presses=1, interval=0.25)
-    if not FIRE_ROUNDS % 10:
+    if not FIRE_ROUNDS % 5:
+        print(f'#{FIRE_ROUNDS} use consuption')
         pag.press('t', presses=1, interval=0.25)
         pag.press('y', presses=1, interval=0.25)
         pag.press('u', presses=1, interval=0.25)
     pag.sleep(1)
-    # pag.press('shiftleft', presses=1, interval=0.25)
-
-    time.sleep(5)
-    pag.click(settings.MAP_CENTER, clicks=2)
     FIRE_ROUNDS += 1
 
 
@@ -188,6 +196,7 @@ if __name__ == '__main__':
                 if NEED_MOVE:
                     print('In battle. alive')
                     start_battle()
+
                 fire_ship()
             else:
                 print('In battle. dead')

@@ -1,26 +1,27 @@
 import time
 
 import ctypes
+import settings
 from pyautogui._window_win import getWindow
 import pyautogui as pag
-from wows import *
-
 
 MOUSEEVENT_MOVE = 0x0001
-FACTOR = 1.3
+FACTOR = 1.2
 LOOP = 10
+
 
 def move_mouse(x, y):
     time.sleep(1)
-    x = x/LOOP/FACTOR
-    y = y/LOOP/FACTOR
+    x = int(x / LOOP / FACTOR)
+    y = int(y / LOOP / FACTOR)
 
     for i in range(10):
-        ctypes.windll.user32.move_mouse(x, y, 0, 0)
+        ctypes.windll.user32.mouse_event(MOUSEEVENT_MOVE, x, y, 0, 0)
         time.sleep(0.01)
 
+
 if __name__ == '__main__':
-    wows_window = getWindow('World of Warships')
+    wows_window = getWindow(settings.WINDOW_TITLE)
     wows_window.set_foreground()  # switch to wows window
 
     # move_ship()
