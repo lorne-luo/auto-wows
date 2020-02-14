@@ -31,13 +31,12 @@ def select_ship():
     for loc in SHIPS:
         # print(f'Ship select {loc}')
         pag.moveTo(loc, duration=0.25)
-        pag.click(loc, clicks=3, interval=1, button='left')
+        pag.click(clicks=3, interval=1, button='left')
         time.sleep(2)
 
         # print(f'Enter battle')
         pag.moveTo(settings.START_BUTTON, duration=0.25)
-        pag.click(settings.START_BUTTON, clicks=3, interval=0.5, button='left')
-        time.sleep(2)
+        pag.click(clicks=3, interval=0.5, button='left')
 
         if not in_port():
             break
@@ -65,11 +64,11 @@ def quit_battle():
     time.sleep(2)
     # print('quit_battle.click')
     pag.moveTo(settings.QUIT_BATTLE_BUTTON, duration=0.25)
-    pag.click(settings.QUIT_BATTLE_BUTTON, clicks=2, interval=0.5, button='left')
+    pag.click(clicks=2, interval=0.5, button='left')
     time.sleep(1)
 
     pag.moveTo(settings.QUIT_BATTLE_CONFIRM_BUTTON, duration=0.25)
-    pag.click(settings.QUIT_BATTLE_CONFIRM_BUTTON, clicks=2, interval=0.5, button='left')
+    pag.click(clicks=2, interval=0.5, button='left')
     time.sleep(11)
     global NEED_MOVE
     NEED_MOVE = True
@@ -82,9 +81,17 @@ def in_battle():
 
 
 def is_alive():
-    return sum([pag.pixelMatchesColor(*settings.SPEED_S, settings.BATTLE_SWM_COLOR, tolerance=30),
-                pag.pixelMatchesColor(*settings.SPEED_W, settings.BATTLE_SWM_COLOR, tolerance=30),
-                pag.pixelMatchesColor(*settings.SPEED_M, settings.BATTLE_SWM_COLOR, tolerance=30)]) > 1
+    pix1 = pag.pixel(*settings.SPEED_S)
+    pix2 = pag.pixel(*settings.SPEED_W)
+    pix3 = pag.pixel(*settings.SPEED_M)
+    result = sum([pag.pixelMatchesColor(*settings.SPEED_S, settings.BATTLE_SWM_COLOR, tolerance=40),
+                  pag.pixelMatchesColor(*settings.SPEED_W, settings.BATTLE_SWM_COLOR, tolerance=40),
+                  pag.pixelMatchesColor(*settings.SPEED_M, settings.BATTLE_SWM_COLOR, tolerance=40)]) > 1
+    if not result:
+        print(pix1)
+        print(pix2)
+        print(pix3)
+    return result
 
 
 def move_ship():
@@ -94,7 +101,7 @@ def move_ship():
         loc = (settings.MAP_CENTER[0] + randint(-90, 90),
                settings.MAP_CENTER[1] + randint(-90, 90))
         pag.moveTo(loc)
-        pag.click(loc, clicks=2, interval=0.5, button='left')
+        pag.click(clicks=2, interval=0.5, button='left')
     time.sleep(1)
     pag.press('esc')
     time.sleep(2)
@@ -119,7 +126,7 @@ def start_battle():
     global NEED_MOVE, FIRE_ROUNDS
     NEED_MOVE = False
     FIRE_ROUNDS = 0
-    pag.sleep(40)
+    pag.sleep(20)
 
 
 def focus_wows():
@@ -169,6 +176,8 @@ def fire_ship():
     move_crosshair(nearest_enemy_loc)
     global FIRE_ROUNDS
     pag.sleep(2)
+
+    # fire if gun is ready
     if pag.pixelMatchesColor(*settings.GUN_READY,
                              (30, 200, 120),
                              tolerance=30):

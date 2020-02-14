@@ -51,3 +51,14 @@ def select_nearest_enemy(locs):
             nearest_loc = loc
             nearest_distance = dis
     return nearest_loc
+
+
+def shutdown():
+    pag.moveTo(settings.WINDOWS_START, duration=0.25)
+    pag.click()
+
+    pag.moveTo(settings.WINDOWS_START2, duration=0.25)
+    pag.click()
+
+    pag.moveTo(settings.WINDOWS_START3, duration=0.25)
+    pag.click()

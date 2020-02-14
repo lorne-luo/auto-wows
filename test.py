@@ -20,12 +20,13 @@ if __name__ == '__main__':
     wows_window = getWindow(settings.WINDOW_TITLE)
     wows_window.set_foreground()  # switch to wows window
 
-    print(pag.pixel(1162, 606))
-    print(pag.pixel(1162, 607))
     print(pag.pixel(1162, 605))
+    print(is_alive())
     print(pag.pixel(*settings.SPEED_S))
     print(pag.pixel(*settings.SPEED_W))
     print(pag.pixel(*settings.SPEED_M))
+    sys.exit(0)
+
     while True:
         loc = select_enemy()
         print(loc)
