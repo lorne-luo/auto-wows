@@ -61,4 +61,4 @@ def shutdown():
     pag.click()
 
     pag.moveTo(settings.WINDOWS_START3, duration=0.25)
-    pag.click()
+    pag.click(clicks=2, interval=0.25)

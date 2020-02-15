@@ -1,3 +1,4 @@
+import sys
 import time
 from random import randint
 
@@ -84,10 +85,11 @@ def is_alive():
     pix1 = pag.pixel(*settings.SPEED_S)
     pix2 = pag.pixel(*settings.SPEED_W)
     pix3 = pag.pixel(*settings.SPEED_M)
-    result = sum([pag.pixelMatchesColor(*settings.SPEED_S, settings.BATTLE_SWM_COLOR, tolerance=40),
-                  pag.pixelMatchesColor(*settings.SPEED_W, settings.BATTLE_SWM_COLOR, tolerance=40),
-                  pag.pixelMatchesColor(*settings.SPEED_M, settings.BATTLE_SWM_COLOR, tolerance=40)]) > 1
+    result = sum([pag.pixelMatchesColor(*settings.SPEED_S, settings.BATTLE_SWM_COLOR, tolerance=50),
+                  pag.pixelMatchesColor(*settings.SPEED_W, settings.BATTLE_SWM_COLOR, tolerance=50),
+                  pag.pixelMatchesColor(*settings.SPEED_M, settings.BATTLE_SWM_COLOR, tolerance=50)]) > 1
     if not result:
+        print('DEAD')
         print(pix1)
         print(pix2)
         print(pix3)
@@ -185,7 +187,7 @@ def fire_ship():
 
     pag.press('r', presses=1, interval=0.25)
     if not FIRE_ROUNDS % 5:
-        print(f'#{FIRE_ROUNDS} use consuption')
+        # print(f'#{FIRE_ROUNDS} use consuption')
         pag.press('t', presses=1, interval=0.25)
         pag.press('y', presses=1, interval=0.25)
         pag.press('u', presses=1, interval=0.25)
@@ -193,9 +195,18 @@ def fire_ship():
     FIRE_ROUNDS += 1
 
 
+def check_battle_mode():
+    if not pag.pixelMatchesColor(*settings.BATTLE_MODE,
+                                 (14, 80, 79),
+                                 tolerance=10):
+        print('Please check battle mode.')
+        sys.exit(0)
+
+
 if __name__ == '__main__':
     focus_wows()
     quit_esc()
+    check_battle_mode()
 
     while True:
         focus_wows()
@@ -215,6 +226,6 @@ if __name__ == '__main__':
             print('In port.')
             select_ship()
         else:
-            print('In else, sleep 5 secs')
+            # print('In else, sleep 5 secs')
             time.sleep(5)
         quit_esc()

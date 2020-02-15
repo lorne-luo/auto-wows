@@ -18,13 +18,18 @@ QUIT_BUTTON_LOC = (1177, 514)
 
 if __name__ == '__main__':
     wows_window = getWindow(settings.WINDOW_TITLE)
+    wows_window.restore()
     wows_window.set_foreground()  # switch to wows window
+    pag.sleep(1)
 
-    print(pag.pixel(1162, 605))
+    check_battle_mode()
+
+    print(pag.pixel(1284, 63))
+    # print(pag.pixel(1162, 605))
     print(is_alive())
-    print(pag.pixel(*settings.SPEED_S))
-    print(pag.pixel(*settings.SPEED_W))
-    print(pag.pixel(*settings.SPEED_M))
+    # print(pag.pixel(*settings.SPEED_S))
+    # print(pag.pixel(*settings.SPEED_W))
+    # print(pag.pixel(*settings.SPEED_M))
     sys.exit(0)
 
     while True:

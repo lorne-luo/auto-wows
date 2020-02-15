@@ -1,10 +1,12 @@
 BUTTON_FOLDER = 'buttons'
 BUTTON_COLOR = (250, 250, 250)
-BATTLE_SWM_COLOR = (150, 150, 150)  # S M W button color
+BATTLE_SWM_COLOR = (170, 170, 170)  # S M W button color
 
 WINDOW_TITLE = '《战舰世界》'
 WINDOW_POSITION = (-7, 0, 2360, 1171)
+
 # in port, enter battle
+BATTLE_MODE=(1284, 63)
 WINDOW_FOCUS = (2190, 119)
 SHIP_FILTER_BUTTON = (21, 900)  # in_port
 START_BUTTON = (1182, 62)
