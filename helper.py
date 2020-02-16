@@ -30,7 +30,7 @@ def get_minimap_image():
 def get_map_image():
     map_image = pag.screenshot(region=(settings.BATTLE_MAP_TOPLEFT[0], settings.BATTLE_MAP_TOPLEFT[1],
                                        settings.BATTLE_MAP_SIZE[0], settings.BATTLE_MAP_SIZE[1]))
-    map_image.save('map.bmp')
+    # map_image.save('map.bmp')
     map_image = cv2.cvtColor(np.array(map_image), cv2.COLOR_RGB2BGR)
     return map_image
 
@@ -61,7 +61,7 @@ def search_enemy_ships(image, ship_type):
     result = cv2.matchTemplate(ship_icon, image, cv2.TM_CCOEFF_NORMED)
     threshold = .8
     loc = np.where(result >= threshold)
-    print(loc)
+    # print(loc)
 
     return [(int(pt[0] + width / 2),
              int(pt[1] + height / 2)) for pt in zip(*loc[::-1]) if

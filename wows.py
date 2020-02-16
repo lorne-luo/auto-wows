@@ -15,6 +15,7 @@ pag.FAILSAFE = False
 
 NEED_MOVE = True
 FIRE_ROUNDS = 0
+MOVE_TO = None
 
 SHIPS = [
     (174, 967),
@@ -26,7 +27,10 @@ SHIPS = [
 def in_port():
     point = settings.SHIP_FILTER_BUTTON
     color = (148, 198, 199)
-    return pag.pixelMatchesColor(*point, color, tolerance=10)
+    result = pag.pixelMatchesColor(*point, color, tolerance=10)
+    if result:
+        check_battle_mode()
+    return result
 
 
 def select_ship():
@@ -115,6 +119,7 @@ def move_ship():
 
 
 def start_battle():
+    MOVE_TO = None
     pag.press('w', presses=5, interval=0.25)
     pag.press('1')
     pag.press('y', presses=2, interval=0.25)
@@ -147,7 +152,7 @@ def focus_wows():
 def select_enemy():
     battle_field = get_battle_field_image()
     enemy_locs = []
-    for ship_type in ['dd', 'ca', 'bb']:
+    for ship_type in ['battle_blood']:
         enemy_locs += search_enemy_ships(battle_field, ship_type)
         if enemy_locs:
             break
@@ -191,11 +196,12 @@ def fire_ship():
         pag.click(clicks=2, interval=0.25)
 
     pag.press('r', presses=1, interval=0.25)
-    if not FIRE_ROUNDS % 5:
+    if not FIRE_ROUNDS % 10:
         # print(f'#{FIRE_ROUNDS} use consuption')
         pag.press('t', presses=1, interval=0.25)
         pag.press('y', presses=1, interval=0.25)
         pag.press('u', presses=1, interval=0.25)
+
     pag.sleep(1)
     FIRE_ROUNDS += 1
 
@@ -209,22 +215,25 @@ def check_battle_mode():
 
 
 def move_ship2():
+    global MOVE_TO
     pag.press('m', presses=1, interval=0.25)
     pag.sleep(1.5)
 
-    map_image = get_map_image()
-    self_loc = search_teamplate(map_image, 'map_self_icon.bmp')
+    if not MOVE_TO:
+        map_image = get_map_image()
+        self_loc = search_teamplate(map_image, 'map_self_icon.bmp')
+        print('self_loc',self_loc)
 
-    if self_loc:
-        move_loc = (settings.BATTLE_MAP_TOPLEFT[0] + settings.BATTLE_MAP_SIZE[0] - self_loc[0],
-                    settings.BATTLE_MAP_TOPLEFT[1] + settings.BATTLE_MAP_SIZE[1] - self_loc[1])
-    else:
-        move_loc = (settings.BATTLE_MAP_TOPLEFT[0] + settings.BATTLE_MAP_SIZE[0] / 2,
-                    settings.BATTLE_MAP_TOPLEFT[1] + settings.BATTLE_MAP_SIZE[1] / 2)
+        if self_loc:
+            MOVE_TO = (settings.BATTLE_MAP_TOPLEFT[0] + settings.BATTLE_MAP_SIZE[0] - self_loc[1],
+                       settings.BATTLE_MAP_TOPLEFT[1] + settings.BATTLE_MAP_SIZE[1] - self_loc[0])
+        else:
+            MOVE_TO = (settings.BATTLE_MAP_TOPLEFT[0] + settings.BATTLE_MAP_SIZE[0] / 2,
+                       settings.BATTLE_MAP_TOPLEFT[1] + settings.BATTLE_MAP_SIZE[1] / 2)
 
     for i in range(4):
-        loc = (move_loc[0] + randint(-90, 90),
-               move_loc[1] + randint(-90, 90))
+        loc = (MOVE_TO[0] + randint(-50, 50),
+               MOVE_TO[1] + randint(-50, 50))
         pag.moveTo(loc)
         pag.click(clicks=2, interval=0.5, button='left')
 
@@ -232,10 +241,10 @@ def move_ship2():
     pag.press('esc')
     time.sleep(2)
 
+
 if __name__ == '__main__':
     focus_wows()
     quit_esc()
-    check_battle_mode()
 
     while True:
         focus_wows()
