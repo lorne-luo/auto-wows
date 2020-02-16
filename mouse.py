@@ -1,5 +1,3 @@
-import time
-
 import ctypes
 import settings
 from pyautogui._window_win import getWindow
@@ -11,13 +9,13 @@ LOOP = 10
 
 
 def move_mouse(x, y):
-    time.sleep(1)
+    pag.sleep(1)
     x = int(x / LOOP / FACTOR)
     y = int(y / LOOP / FACTOR)
 
     for i in range(10):
         ctypes.windll.user32.mouse_event(MOUSEEVENT_MOVE, x, y, 0, 0)
-        time.sleep(0.01)
+        pag.sleep(0.01)
 
 
 if __name__ == '__main__':

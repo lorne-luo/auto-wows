@@ -6,7 +6,8 @@ import pyautogui as pag
 from pyautogui._window_win import getWindow
 
 import settings as settings
-from helper import get_battle_field_image, search_enemy_ships, select_nearest_enemy, distance
+from helper import get_battle_field_image, search_enemy_ships, select_nearest_enemy, distance, get_minimap_image, \
+    search_teamplate, get_map_image
 from mouse import move_mouse
 
 pag.PAUSE = 0
@@ -97,8 +98,12 @@ def is_alive():
 
 
 def move_ship():
+    map_image = get_map_image()
+    enemy_home = search_teamplate(map_image, 'map_enemy_home.bmp')
+    print(enemy_home)
+
     pag.press('m', presses=1, interval=0.25)
-    time.sleep(1)
+    time.sleep(1.5)
     for i in range(4):
         loc = (settings.MAP_CENTER[0] + randint(-90, 90),
                settings.MAP_CENTER[1] + randint(-90, 90))
@@ -116,7 +121,7 @@ def start_battle():
     pag.press('u', presses=2, interval=0.25)
     pag.sleep(1)
 
-    move_ship()
+    move_ship2()
 
     # pag.moveTo(settings.MAP_CENTER)
     # pag.click(settings.MAP_CENTER, clicks=2)
@@ -163,7 +168,7 @@ def fire_ship():
     if not pag.pixelMatchesColor(*settings.AUTO_PILOT,
                                  (76, 232, 170),
                                  tolerance=30):
-        move_ship()
+        move_ship2()
 
     pag.press('`', presses=1, interval=0.25)
     pag.press('r', presses=1, interval=0.25)
@@ -202,6 +207,30 @@ def check_battle_mode():
         print('Please check battle mode.')
         sys.exit(0)
 
+
+def move_ship2():
+    pag.press('m', presses=1, interval=0.25)
+    pag.sleep(1.5)
+
+    map_image = get_map_image()
+    self_loc = search_teamplate(map_image, 'map_self_icon.bmp')
+
+    if self_loc:
+        move_loc = (settings.BATTLE_MAP_TOPLEFT[0] + settings.BATTLE_MAP_SIZE[0] - self_loc[0],
+                    settings.BATTLE_MAP_TOPLEFT[1] + settings.BATTLE_MAP_SIZE[1] - self_loc[1])
+    else:
+        move_loc = (settings.BATTLE_MAP_TOPLEFT[0] + settings.BATTLE_MAP_SIZE[0] / 2,
+                    settings.BATTLE_MAP_TOPLEFT[1] + settings.BATTLE_MAP_SIZE[1] / 2)
+
+    for i in range(4):
+        loc = (move_loc[0] + randint(-90, 90),
+               move_loc[1] + randint(-90, 90))
+        pag.moveTo(loc)
+        pag.click(clicks=2, interval=0.5, button='left')
+
+    time.sleep(1)
+    pag.press('esc')
+    time.sleep(2)
 
 if __name__ == '__main__':
     focus_wows()

@@ -22,11 +22,39 @@ if __name__ == '__main__':
     wows_window.set_foreground()  # switch to wows window
     pag.sleep(1)
 
-    check_battle_mode()
+    move_ship2()
 
-    print(pag.pixel(1284, 63))
+    sys.exit(0)
+
+    pag.press('m', presses=1, interval=0.25)
+    pag.sleep(1.5)
+
+    map_image = get_map_image()
+    enemy_home = search_teamplate(map_image, 'map_enemy_home.bmp')
+    print('enemy_home', enemy_home)
+
+    self_loc = search_teamplate(map_image, 'map_self_icon.bmp')
+    print('map_self_icon', self_loc)
+
+    if not enemy_home:
+        loc = (settings.BATTLE_MAP_TOPLEFT[0] + enemy_home[0],
+               settings.BATTLE_MAP_TOPLEFT[1] + enemy_home[1])
+        pag.click(loc, clicks=2, interval=0.5, button='left')
+    else:
+        self_loc = search_teamplate(map_image, 'map_self_icon.bmp')
+        print('map_self_icon', self_loc)
+        loc = (settings.BATTLE_MAP_TOPLEFT[0] + settings.BATTLE_MAP_SIZE[0] - self_loc[0],
+               settings.BATTLE_MAP_TOPLEFT[1] + settings.BATTLE_MAP_SIZE[1] - self_loc[1])
+        pag.click(loc, clicks=2, interval=0.5, button='left')
+
+    time.sleep(1)
+    pag.press('esc')
+
+    # check_battle_mode()
+
+    # print(pag.pixel(1284, 63))
     # print(pag.pixel(1162, 605))
-    print(is_alive())
+    # print(is_alive())
     # print(pag.pixel(*settings.SPEED_S))
     # print(pag.pixel(*settings.SPEED_W))
     # print(pag.pixel(*settings.SPEED_M))
