@@ -72,7 +72,7 @@ def search_enemy_ships(image, ship_type):
 def distance(p1, p2):
     x = p2[0] - p1[0]
     y = p2[1] - p1[1]
-    return sqrt(x ** 2 + y ** 2)
+    return int(sqrt(x ** 2 + y ** 2))
 
 
 def select_nearest_enemy(locs):
