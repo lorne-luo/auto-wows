@@ -22,7 +22,7 @@ def get_battle_field_image():
 def get_minimap_image():
     minimap_image = pag.screenshot(region=(settings.BATTLE_MINIMAP_TOPLEFT[0], settings.BATTLE_MINIMAP_TOPLEFT[1] + 150,
                                            settings.BATTLE_MINIMAP_SIZE[0], settings.BATTLE_MINIMAP_SIZE[0]))
-    # minimap_image.save('minimap.bmp')
+    minimap_image.save('minimap.bmp')
     minimap_image = cv2.cvtColor(np.array(minimap_image), cv2.COLOR_RGB2BGR)
     return minimap_image
 
@@ -30,17 +30,16 @@ def get_minimap_image():
 def get_map_image():
     map_image = pag.screenshot(region=(settings.BATTLE_MAP_TOPLEFT[0], settings.BATTLE_MAP_TOPLEFT[1],
                                        settings.BATTLE_MAP_SIZE[0], settings.BATTLE_MAP_SIZE[1]))
-    # map_image.save('map.bmp')
+    map_image.save('map.bmp')
     map_image = cv2.cvtColor(np.array(map_image), cv2.COLOR_RGB2BGR)
     return map_image
 
 
-def search_teamplate(image, template_file, return_all=False):
+def search_template(image, template_file, threshold=0.85, return_all=False):
     template = cv2.imread(f'buttons/{template_file}')
-    width, height = template.shape[:2]
+    height, width = template.shape[:2]
     result = cv2.matchTemplate(template, image, cv2.TM_CCOEFF_NORMED)
 
-    threshold = .85
     if not return_all:
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
         if max_val > threshold:

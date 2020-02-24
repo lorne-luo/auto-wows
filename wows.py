@@ -7,7 +7,7 @@ from pyautogui._window_win import getWindow
 
 import settings as settings
 from helper import get_battle_field_image, search_enemy_ships, select_nearest_enemy, distance, get_minimap_image, \
-    search_teamplate, get_map_image
+    search_template, get_map_image
 from mouse import move_mouse
 
 pag.PAUSE = 0
@@ -103,7 +103,7 @@ def is_alive():
 
 def move_ship():
     map_image = get_map_image()
-    enemy_home = search_teamplate(map_image, 'map_enemy_home.bmp')
+    enemy_home = search_template(map_image, 'map_enemy_home.bmp')
     print(enemy_home)
 
     pag.press('m', presses=1, interval=0.25)
@@ -120,7 +120,6 @@ def move_ship():
 
 def start_battle():
     MOVE_TO = None
-    pag.press('w', presses=5, interval=0.25)
     pag.press('1')
     pag.press('y', presses=2, interval=0.25)
     pag.press('u', presses=2, interval=0.25)
@@ -145,6 +144,7 @@ def focus_wows():
     wows_window = getWindow(settings.WINDOW_TITLE)
     # wows_window = getWindow('《战舰世界》')
 
+    wows_window.restore()
     wows_window.set_position(*settings.WINDOW_POSITION)
     wows_window.set_foreground()  # switch to wows window
 
@@ -217,16 +217,17 @@ def check_battle_mode():
 def move_ship2():
     global MOVE_TO
     pag.press('m', presses=1, interval=0.25)
-    pag.sleep(1.5)
+    pag.sleep(2)
+    pag.press('w', presses=5, interval=0.25)
 
     if not MOVE_TO:
         map_image = get_map_image()
-        self_loc = search_teamplate(map_image, 'map_self_icon.bmp')
-        print('self_loc',self_loc)
+        self_loc = search_template(map_image, 'map_friend_icon.bmp')
+        print('self_loc', self_loc)
 
         if self_loc:
-            MOVE_TO = (settings.BATTLE_MAP_TOPLEFT[0] + settings.BATTLE_MAP_SIZE[0] - self_loc[1],
-                       settings.BATTLE_MAP_TOPLEFT[1] + settings.BATTLE_MAP_SIZE[1] - self_loc[0])
+            MOVE_TO = (settings.BATTLE_MAP_TOPLEFT[0] + settings.BATTLE_MAP_SIZE[0] - self_loc[0],
+                       settings.BATTLE_MAP_TOPLEFT[1] + settings.BATTLE_MAP_SIZE[1] - self_loc[1])
         else:
             MOVE_TO = (settings.BATTLE_MAP_TOPLEFT[0] + settings.BATTLE_MAP_SIZE[0] / 2,
                        settings.BATTLE_MAP_TOPLEFT[1] + settings.BATTLE_MAP_SIZE[1] / 2)
