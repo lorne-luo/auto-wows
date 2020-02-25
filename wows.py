@@ -147,15 +147,11 @@ def start_battle():
 
 def focus_wows():
     wows_window = getWindow(settings.WINDOW_TITLE)
-    # wows_window = getWindow('《战舰世界》')
-
     wows_window.restore()
     wows_window.set_position(*settings.WINDOW_POSITION)
     wows_window.set_foreground()  # switch to wows window
 
-    # switch to port
-    pag.moveTo(settings.PORT_BUTTON, duration=0.25)
-    pag.click(clicks=2, interval=1, button='left')
+
 
 def select_enemy():
     battle_field = get_battle_field_image()
@@ -254,6 +250,9 @@ def move_ship2():
 if __name__ == '__main__':
     focus_wows()
     quit_esc()
+    # switch to port
+    pag.moveTo(settings.PORT_BUTTON, duration=0.25)
+    pag.click(clicks=2, interval=1, button='left')
 
     while True:
         focus_wows()

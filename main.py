@@ -26,13 +26,9 @@ class WOWS(WOWS_PORT, WOWS_BATTLE, WOWS_Move, WOWS_Fire):
 
     def focus_wows(self):
         wows_window = getWindow(settings.WINDOW_TITLE)
-
+        wows_window.restore()
         wows_window.set_position(*settings.WINDOW_POSITION)
         wows_window.set_foreground()  # switch to wows window
-
-        # switch to port
-        pag.moveTo(settings.PORT_BUTTON, duration=0.25)
-        pag.click(clicks=2, interval=1, button='left')
 
     def quit_esc(self):
         if pag.pixelMatchesColor(*settings.QUIT_BATTLE_FINISHED_BUTTON2,
@@ -52,6 +48,10 @@ if __name__ == '__main__':
     wows = WOWS()
     wows.focus_wows()
     wows.quit_esc()
+
+    # switch to port
+    pag.moveTo(settings.PORT_BUTTON, duration=0.25)
+    pag.click(clicks=2, interval=1, button='left')
 
     while True:
         wows.focus_wows()
