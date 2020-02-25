@@ -4,7 +4,7 @@ from random import randint
 import pyautogui as pag
 
 import settings as settings
-from helper import search_teamplate, get_map_image
+from helper import search_template, get_map_image
 
 
 class WOWS_Move(object):
@@ -16,7 +16,7 @@ class WOWS_Move(object):
 
         if not MOVE_TO:
             map_image = get_map_image()
-            self_loc = search_teamplate(map_image, 'map_self_icon.bmp')
+            self_loc = search_template(map_image, 'map_self_icon.bmp')
             print('self_loc', self_loc)
 
             if self_loc:
