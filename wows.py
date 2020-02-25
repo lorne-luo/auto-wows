@@ -18,9 +18,9 @@ FIRE_ROUNDS = 0
 MOVE_TO = None
 
 SHIPS = [
-    (174, 967),
-    (174, 1030),
-    # (174,1100),
+    (138, 957),
+    (138, 1024),
+    # (138,1100),
 ]
 
 
@@ -35,7 +35,12 @@ def in_port():
 
 def select_ship():
     for loc in SHIPS:
-        # print(f'Ship select {loc}')
+        if pag.pixelMatchesColor(*loc,
+                                 settings.SHIP_IN_BATTLE_COLOR,
+                                 tolerance=20):
+            print(f'skip {loc}')
+            continue
+
         pag.moveTo(loc, duration=0.25)
         pag.click(clicks=3, interval=1, button='left')
         time.sleep(2)

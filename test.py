@@ -22,7 +22,7 @@ if __name__ == '__main__':
     wows_window.set_foreground()  # switch to wows window
     pag.sleep(1)
 
-    move_ship2()
+    print(pag.pixel(138, 957))
 
     sys.exit(0)
 

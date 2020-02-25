@@ -19,9 +19,9 @@ class WOWS(WOWS_PORT, WOWS_BATTLE, WOWS_Move, WOWS_Fire):
     MOVE_TO = None
 
     SHIPS = [
-        (174, 967),
-        (174, 1030),
-        # (174,1100),
+        (138, 957),
+        (138, 1024),
+        # (138,1100),
     ]
 
     def focus_wows(self):
